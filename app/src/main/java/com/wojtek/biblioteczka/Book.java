@@ -13,6 +13,7 @@ public class Book {
     public String city;
     public String publisher;
     public String year;
+    public String cover;
     public Calendar add_date;
     public String borrowed_by;
     public Calendar borrowed_date;
