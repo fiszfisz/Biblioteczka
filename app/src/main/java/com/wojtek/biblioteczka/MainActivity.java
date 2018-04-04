@@ -1,6 +1,7 @@
 package com.wojtek.biblioteczka;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,8 +23,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected BookArrayAdapter adapter;
-    protected ArrayList<Book> adapterData;
+    private BookArrayAdapter adapter;
+    private ArrayList<Book> adapterData;
 
     private class BookArrayAdapter extends ArrayAdapter {
         public BookArrayAdapter(Context context, ArrayList<Book> array) {
@@ -69,6 +71,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class OnItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Book book = (Book)parent.getItemAtPosition(position);
+
+            Intent intent = new Intent(view.getContext(), EditBookActivity.class);
+            intent.putExtra("Book", book);
+            startActivity(intent);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new BookArrayAdapter(this, adapterData);
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new OnItemClickListener());
 
         Book book;
 
