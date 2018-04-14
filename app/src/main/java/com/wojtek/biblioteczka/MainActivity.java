@@ -3,8 +3,6 @@ package com.wojtek.biblioteczka;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,36 +38,17 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final Book book = (Book)getItem(position);
-
             final View view = inflater.inflate(R.layout.activity_main_item, parent, false);
 
             TextView titleTextView = view.findViewById(R.id.titleTextView);
             TextView authorTextView = view.findViewById(R.id.authorTextView);
+            ImageView imageView = view.findViewById(R.id.imageView);
 
             titleTextView.setText(book.title);
             authorTextView.setText(book.author);
 
-            Thread loader = new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        ImageView imageView = view.findViewById(R.id.imageView);
-                        URL url = new URL(book.cover);
-                        URLConnection connection = url.openConnection();
-                        Bitmap bmp = BitmapFactory.decodeStream(connection.getInputStream());
-                        imageView.setImageBitmap(bmp);
-                    } catch (Exception e) {
-                        // Image stays the same
-                    }
-                }
-            };
-
-            try {
-                loader.start();
-                loader.join();
-            } catch (Exception e) {
-
-            }
+            BitmapDownloaderTask task = new BitmapDownloaderTask(imageView, book.cover);
+            task.execute();
 
             return view;
         }
