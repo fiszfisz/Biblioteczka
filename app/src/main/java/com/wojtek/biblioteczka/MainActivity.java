@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         book = new Book();
         book.author = "Jarosław Grzędowicz";
         book.title = "Hel 3";
-        book.cover = "https://s.znak.com.pl/files/covers/card/b3/T255415.jpg";
+        book.cover = "http://ecsmedia.pl/c/hel-3-w-iext47374727.jpg";
         bookcase.add(book);
 
         book = new Book();
@@ -113,13 +113,13 @@ public class MainActivity extends AppCompatActivity {
         book = new Book();
         book.author = "Jarosław Grzędowicz";
         book.title = "Pan Lodowego Ogrodu TOM 4";
-        book.cover = "http://ecsmedia.pl/c/pan-lodowego-ogrodu-tom-4-b-iext43252937.jpg";
+        book.cover = "http://ecsmedia.pl/c/pan-lodowego-ogrodu-tom-4-w-iext43252937.jpg";
         bookcase.add(book);
 
         book = new Book();
         book.author = "Chips Hardy";
         book.title = "Poluj, bo upolują ciebie";
-        book.cover = "http://www.wydawnictwoamber.pl/files/1652309683/poluj-bo-upoluja-ciebie_38.jpg";
+        book.cover = "http://ecsmedia.pl/c/poluj-bo-upoluja-ciebie-w-iext38782418.jpg";
         bookcase.add(book);
 
         adapterData = bookcase.getBooks();
