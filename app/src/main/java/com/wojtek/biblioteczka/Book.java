@@ -41,6 +41,7 @@ public class Book implements Parcelable {
     public Calendar borrowed_date;
 
     public Book() {
+        id = 0;
         author = "";
         title = "";
         city = "";
@@ -55,6 +56,7 @@ public class Book implements Parcelable {
     public Book(Parcel in) {
         super();
 
+        id = in.readInt();
         author = in.readString();
         title = in.readString();
         city = in.readString();
@@ -148,6 +150,7 @@ public class Book implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(author);
         dest.writeString(title);
         dest.writeString(city);
