@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -47,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
             titleTextView.setText(book.title);
             authorTextView.setText(book.author);
 
-            BitmapDownloaderTask task = new BitmapDownloaderTask(imageView, book.cover);
-            task.execute();
+            if (!book.cover.isEmpty()) {
+                BitmapDownloaderTask task = new BitmapDownloaderTask(imageView, book.cover);
+                task.execute();
+            }
 
             return view;
         }
@@ -77,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener());
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addBook(view);
+            }
+        });
 
         Book book;
 
@@ -130,6 +141,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ADD_BOOK_REQUEST:
+                if (resultCode == Activity.RESULT_OK) {
+                    Book book = data.getParcelableExtra("Book");
+                    bookcase.add(book);
+
+                    adapterData = bookcase.getBooks();
+                    adapter.notifyDataSetChanged();
+                }
                 break;
             case EDIT_BOOK_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
@@ -143,5 +161,12 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    public void addBook(View view) {
+        Book book = new Book();
+        Intent intent = new Intent(view.getContext(), EditBookActivity.class);
+        intent.putExtra("Book", book);
+        startActivityForResult(intent, ADD_BOOK_REQUEST);
     }
 }
