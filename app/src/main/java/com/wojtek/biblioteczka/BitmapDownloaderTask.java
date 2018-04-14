@@ -23,7 +23,7 @@ public class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (isCancelled()) {
-            bitmap = null;
+            return;
         }
 
         if (imageViewWeakReference != null) {
