@@ -18,7 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditBookActivity"></activity>
+        <activity android:name=".EditBookActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wojtek.biblioteczka.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
