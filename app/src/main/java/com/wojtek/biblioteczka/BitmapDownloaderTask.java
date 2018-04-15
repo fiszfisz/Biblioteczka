@@ -1,6 +1,7 @@
 package com.wojtek.biblioteczka;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -23,13 +24,18 @@ public class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (isCancelled()) {
-            return;
+            bitmap = null;
         }
 
         if (imageViewWeakReference != null) {
             ImageView imageView = imageViewWeakReference.get();
             if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
+                if (bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
+                } else {
+                    Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.ic_book);
+                    imageView.setImageDrawable(placeholder);
+                }
             }
         }
     }
