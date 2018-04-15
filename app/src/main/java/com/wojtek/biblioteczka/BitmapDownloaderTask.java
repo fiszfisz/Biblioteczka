@@ -17,6 +17,13 @@ public class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     @Override
+    protected void onPreExecute() {
+        ImageView imageView = imageViewWeakReference.get();
+        Drawable load = imageView.getContext().getResources().getDrawable(R.drawable.ic_load);
+        imageView.setImageDrawable(load);
+    }
+
+    @Override
     protected Bitmap doInBackground(String... params) {
         return ImageTools.downloadBitmap(url);
     }
