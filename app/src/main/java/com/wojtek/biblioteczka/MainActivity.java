@@ -38,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            final Book book = (Book)getItem(position);
-            final View view = inflater.inflate(R.layout.activity_main_item, parent, false);
+            Book book = (Book)getItem(position);
+            // TODO use convert view with view holder
+            View view = inflater.inflate(R.layout.activity_main_item, parent, false);
 
             TextView titleTextView = view.findViewById(R.id.titleTextView);
             TextView authorTextView = view.findViewById(R.id.authorTextView);
