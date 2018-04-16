@@ -62,10 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
             TextView authorTextView = view.findViewById(R.id.authorTextView);
             TextView titleTextView = view.findViewById(R.id.titleTextView);
+            TextView publisherTextView = view.findViewById(R.id.publisherTextView);
+            TextView yearTextView = view.findViewById(R.id.yearTextView);
             ImageView imageView = view.findViewById(R.id.coverImageView);
 
             authorTextView.setText(book.author);
-            titleTextView.setText(book.title);
+            titleTextView.setText(book.title.replace(". ", ".\n"));
+            publisherTextView.setText(book.publisher);
+            yearTextView.setText(book.year);
 
             if (!book.cover.isEmpty()) {
                 BitmapDownloaderTask task = new BitmapDownloaderTask(imageView, book.cover);
