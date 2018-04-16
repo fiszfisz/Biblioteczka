@@ -54,12 +54,12 @@ public class EditBookActivity extends AppCompatActivity {
         EditText coverEditText = findViewById(R.id.coverEditText);
 
         // TODO more sophisticated method to check if fields were modified
-        book.author = authorEditText.getText().toString();
-        book.title = titleEditText.getText().toString();
-        book.city = cityEditText.getText().toString();
-        book.publisher = publisherEditText.getText().toString();
-        book.year = yearEditText.getText().toString();
-        book.cover = coverEditText.getText().toString();
+        book.author = authorEditText.getText().toString().trim();
+        book.title = titleEditText.getText().toString().trim();
+        book.city = cityEditText.getText().toString().trim();
+        book.publisher = publisherEditText.getText().toString().trim();
+        book.year = yearEditText.getText().toString().trim();
+        book.cover = coverEditText.getText().toString().trim();
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("Book", book);

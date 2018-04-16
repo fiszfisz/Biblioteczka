@@ -128,7 +128,7 @@ public class Bookcase {
                     break;
 
                 case XmlPullParser.TEXT:
-                    text = parser.getText();
+                    text = parser.getText().trim();
                     break;
 
                 case XmlPullParser.END_TAG:

@@ -73,5 +73,7 @@ public class Book implements Parcelable {
         dest.writeString(publisher);
         dest.writeString(year);
         dest.writeString(cover);
+
+        // TODO missing borrow fields
     }
 }
