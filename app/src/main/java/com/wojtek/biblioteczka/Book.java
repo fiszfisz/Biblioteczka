@@ -4,12 +4,33 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Calendar;
+import java.util.Comparator;
 
 /**
  * Created by Wojtek on 2018-03-28.
  */
 
 public class Book implements Parcelable {
+
+    public static Comparator<Book> AuthorComparator = new Comparator<Book>() {
+        @Override
+        public int compare(Book o1, Book o2) {
+            String v1 = o1.author.toUpperCase();
+            String v2 = o2.author.toUpperCase();
+
+            return v1.compareTo(v2);
+        }
+    };
+
+    public static Comparator<Book> TitleComparator = new Comparator<Book>() {
+        @Override
+        public int compare(Book o1, Book o2) {
+            String v1 = o1.title.toUpperCase();
+            String v2 = o2.title.toUpperCase();
+
+            return v1.compareTo(v2);
+        }
+    };
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Book createFromParcel(Parcel in) {
