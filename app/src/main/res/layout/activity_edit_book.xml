@@ -15,7 +15,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Autor"
+        android:text="@string/author"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="Autor"
+        android:text="@string/author"
         app:layout_constraintStart_toStartOf="@+id/authorEditText"
         app:layout_constraintTop_toBottomOf="@+id/authorEditText" />
 
@@ -38,7 +38,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Tytuł"
+        android:text="@string/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="Tytuł"
+        android:text="@string/title"
         app:layout_constraintStart_toStartOf="@+id/titleEditText"
         app:layout_constraintTop_toBottomOf="@+id/titleEditText" />
 
@@ -62,7 +62,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Wydawca"
+        android:text="@string/publisher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="Wydawca"
+        android:text="@string/publisher"
         app:layout_constraintStart_toStartOf="@+id/publisherEditText"
         app:layout_constraintTop_toBottomOf="@+id/publisherEditText" />
 
@@ -84,7 +84,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Miasto"
+        android:text="@string/city"
         app:layout_constraintEnd_toStartOf="@+id/yearEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/publisherTextView" />
@@ -94,7 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="Miasto"
+        android:text="@string/city"
         app:layout_constraintStart_toStartOf="@+id/cityEditText"
         app:layout_constraintTop_toBottomOf="@+id/cityEditText" />
 
@@ -106,7 +106,7 @@
         android:layout_marginStart="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Rok"
+        android:text="@string/year"
         app:layout_constraintBaseline_toBaselineOf="@+id/cityEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -117,7 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="Rok"
+        android:text="@string/year"
         app:layout_constraintStart_toStartOf="@+id/yearEditText"
         app:layout_constraintTop_toBottomOf="@+id/yearEditText" />
 
@@ -130,7 +130,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Okładka"
+        android:text="@string/cover"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cityTextView" />
@@ -140,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="Okładka"
+        android:text="@string/cover"
         app:layout_constraintStart_toStartOf="@+id/coverEditText"
         app:layout_constraintTop_toBottomOf="@+id/coverEditText" />
 
@@ -151,7 +151,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:onClick="onSaveButtonClick"
-        android:text="Zapisz"
+        android:text="@string/save"
         app:layout_constraintEnd_toStartOf="@+id/cancelButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -164,7 +164,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:onClick="onCancelButtonClick"
-        android:text="Anuluj"
+        android:text="@string/cancel"
         app:layout_constraintBaseline_toBaselineOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
