@@ -51,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
             // TODO use convert view with the view holder
             View view = inflater.inflate(R.layout.activity_main_item, parent, false);
 
-            TextView titleTextView = view.findViewById(R.id.titleTextView);
             TextView authorTextView = view.findViewById(R.id.authorTextView);
-            ImageView imageView = view.findViewById(R.id.imageView);
+            TextView titleTextView = view.findViewById(R.id.titleTextView);
+            ImageView imageView = view.findViewById(R.id.coverImageView);
 
-            titleTextView.setText(book.title);
             authorTextView.setText(book.author);
+            titleTextView.setText(book.title);
 
             if (!book.cover.isEmpty()) {
                 BitmapDownloaderTask task = new BitmapDownloaderTask(imageView, book.cover);
