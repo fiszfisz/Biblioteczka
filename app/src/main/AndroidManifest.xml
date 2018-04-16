@@ -23,6 +23,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wojtek.biblioteczka.MainActivity" />
         </activity>
+        <activity android:name=".ShowBookActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wojtek.biblioteczka.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

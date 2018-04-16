@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     static final int ADD_BOOK_REQUEST = 1;
     static final int EDIT_BOOK_REQUEST = 2;
+    static final int SHOW_BOOK_REQUEST = 3;
 
     private File dataFile;
 
@@ -71,9 +72,22 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Book book = (Book)parent.getItemAtPosition(position);
 
+            Intent intent = new Intent(view.getContext(), ShowBookActivity.class);
+            intent.putExtra("Book", book);
+            startActivityForResult(intent, SHOW_BOOK_REQUEST);
+        }
+    }
+
+    private class OnItemLongClickListener implements AdapterView.OnItemLongClickListener {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            Book book = (Book)parent.getItemAtPosition(position);
+
             Intent intent = new Intent(view.getContext(), EditBookActivity.class);
             intent.putExtra("Book", book);
             startActivityForResult(intent, EDIT_BOOK_REQUEST);
+
+            return true;
         }
     }
 
@@ -112,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener());
+        listView.setOnItemLongClickListener(new OnItemLongClickListener());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
                     adapterData = bookcase.getBooks();
                     adapter.notifyDataSetChanged();
                 }
+                break;
+            case SHOW_BOOK_REQUEST:
                 break;
             default:
                 break;
