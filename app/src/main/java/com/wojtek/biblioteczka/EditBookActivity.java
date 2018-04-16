@@ -32,8 +32,8 @@ public class EditBookActivity extends AppCompatActivity {
     private void setContents(Book book) {
         EditText authorEditText = findViewById(R.id.authorEditText);
         EditText titleEditText = findViewById(R.id.titleEditText);
-        EditText cityEditText = findViewById(R.id.cityEditText);
         EditText publisherEditText = findViewById(R.id.publisherEditText);
+        EditText cityEditText = findViewById(R.id.cityEditText);
         EditText yearEditText = findViewById(R.id.yearEditText);
         EditText coverEditText = findViewById(R.id.coverEditText);
 
@@ -48,16 +48,16 @@ public class EditBookActivity extends AppCompatActivity {
     public void onSaveButtonClick(View view) {
         EditText authorEditText = findViewById(R.id.authorEditText);
         EditText titleEditText = findViewById(R.id.titleEditText);
-        EditText cityEditText = findViewById(R.id.cityEditText);
         EditText publisherEditText = findViewById(R.id.publisherEditText);
+        EditText cityEditText = findViewById(R.id.cityEditText);
         EditText yearEditText = findViewById(R.id.yearEditText);
         EditText coverEditText = findViewById(R.id.coverEditText);
 
         // TODO more sophisticated method to check if fields were modified
         book.author = authorEditText.getText().toString().trim();
         book.title = titleEditText.getText().toString().trim();
-        book.city = cityEditText.getText().toString().trim();
         book.publisher = publisherEditText.getText().toString().trim();
+        book.city = cityEditText.getText().toString().trim();
         book.year = yearEditText.getText().toString().trim();
         book.cover = coverEditText.getText().toString().trim();
 

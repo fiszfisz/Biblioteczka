@@ -24,8 +24,8 @@ public class Book implements Parcelable {
     public int id;
     public String author;
     public String title;
-    public String city;
     public String publisher;
+    public String city;
     public String year;
     public String cover;
     public Calendar add_date;
@@ -36,8 +36,8 @@ public class Book implements Parcelable {
         id = 0;
         author = "";
         title = "";
-        city = "";
         publisher = "";
+        city = "";
         year = "";
         cover = "";
         add_date = null;
@@ -51,8 +51,8 @@ public class Book implements Parcelable {
         id = in.readInt();
         author = in.readString();
         title = in.readString();
-        city = in.readString();
         publisher = in.readString();
+        city = in.readString();
         year = in.readString();
         cover = in.readString();
 
@@ -69,8 +69,8 @@ public class Book implements Parcelable {
         dest.writeInt(id);
         dest.writeString(author);
         dest.writeString(title);
-        dest.writeString(city);
         dest.writeString(publisher);
+        dest.writeString(city);
         dest.writeString(year);
         dest.writeString(cover);
 

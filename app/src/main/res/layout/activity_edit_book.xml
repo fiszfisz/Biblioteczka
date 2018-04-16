@@ -24,7 +24,7 @@
         android:id="@+id/authorTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:text="Autor"
         app:layout_constraintStart_toStartOf="@+id/authorEditText"
         app:layout_constraintTop_toBottomOf="@+id/authorEditText" />
@@ -48,13 +48,13 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:text="Tytuł"
         app:layout_constraintStart_toStartOf="@+id/titleEditText"
         app:layout_constraintTop_toBottomOf="@+id/titleEditText" />
 
     <EditText
-        android:id="@+id/cityEditText"
+        android:id="@+id/publisherEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -62,40 +62,41 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Miasto"
+        android:text="Wydawca"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
     <TextView
-        android:id="@+id/cityTextView"
+        android:id="@+id/publisherTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Miasto"
-        app:layout_constraintStart_toStartOf="@+id/cityEditText"
-        app:layout_constraintTop_toBottomOf="@+id/cityEditText" />
+        android:layout_marginStart="4dp"
+        android:text="Wydawca"
+        app:layout_constraintStart_toStartOf="@+id/publisherEditText"
+        app:layout_constraintTop_toBottomOf="@+id/publisherEditText" />
 
     <EditText
-        android:id="@+id/publisherEditText"
+        android:id="@+id/cityEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Wydawca"
+        android:text="Miasto"
+        app:layout_constraintEnd_toStartOf="@+id/yearEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cityTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/publisherTextView" />
 
     <TextView
-        android:id="@+id/publisherTextView"
+        android:id="@+id/cityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Wydawca"
-        app:layout_constraintStart_toStartOf="@+id/publisherEditText"
-        app:layout_constraintTop_toBottomOf="@+id/publisherEditText" />
+        android:layout_marginStart="4dp"
+        android:text="Miasto"
+        app:layout_constraintStart_toStartOf="@+id/cityEditText"
+        app:layout_constraintTop_toBottomOf="@+id/cityEditText" />
 
     <EditText
         android:id="@+id/yearEditText"
@@ -106,16 +107,16 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Rok"
-        app:layout_constraintBaseline_toBaselineOf="@+id/publisherEditText"
+        app:layout_constraintBaseline_toBaselineOf="@+id/cityEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/publisherEditText" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cityEditText" />
 
     <TextView
         android:id="@+id/yearTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="4dp"
         android:text="Rok"
         app:layout_constraintStart_toStartOf="@+id/yearEditText"
         app:layout_constraintTop_toBottomOf="@+id/yearEditText" />
@@ -132,13 +133,13 @@
         android:text="Okładka"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/publisherTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/cityTextView" />
 
     <TextView
         android:id="@+id/coverTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:text="Okładka"
         app:layout_constraintStart_toStartOf="@+id/coverEditText"
         app:layout_constraintTop_toBottomOf="@+id/coverEditText" />

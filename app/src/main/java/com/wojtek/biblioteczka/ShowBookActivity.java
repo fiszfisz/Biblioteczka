@@ -32,15 +32,15 @@ public class ShowBookActivity extends AppCompatActivity {
     private void setContents(Book book) {
         TextView authorTextView = findViewById(R.id.authorTextView);
         TextView titleTextView = findViewById(R.id.titleTextView);
-        TextView cityTextView = findViewById(R.id.cityTextView);
         TextView publisherTextView = findViewById(R.id.publisherTextView);
+        TextView cityTextView = findViewById(R.id.cityTextView);
         TextView yearTextView = findViewById(R.id.yearTextView);
         ImageView coverImageView = findViewById(R.id.coverImageView);
 
         authorTextView.setText(book.author);
         titleTextView.setText(book.title);
-        cityTextView.setText(book.city);
         publisherTextView.setText(book.publisher);
+        cityTextView.setText(book.city);
         yearTextView.setText(book.year);
 
         if (!book.cover.isEmpty()) {

@@ -74,8 +74,8 @@ public class Bookcase {
                 "    <id>%d</id>\n" +
                 "    <author>%s</author>\n" +
                 "    <title>%s</title>\n" +
-                "    <city>%s</city>\n" +
                 "    <publisher>%s</publisher>\n" +
+                "    <city>%s</city>\n" +
                 "    <year>%s</year>\n" +
                 "    <cover>%s</cover>\n" +
                 "  </book>\n";
@@ -88,8 +88,8 @@ public class Bookcase {
                     book.id,
                     book.author,
                     book.title,
-                    book.city,
                     book.publisher,
+                    book.city,
                     book.year,
                     book.cover);
             sb.append(str);
@@ -142,11 +142,11 @@ public class Bookcase {
                         case "title":
                             book.title = text;
                             break;
-                        case "city":
-                            book.city = text;
-                            break;
                         case "publisher":
                             book.publisher = text;
+                            break;
+                        case "city":
+                            book.city = text;
                             break;
                         case "year":
                             book.year = text;
