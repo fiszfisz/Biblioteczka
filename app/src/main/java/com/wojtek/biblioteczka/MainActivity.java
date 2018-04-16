@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     static final String tag = "MainActivity.onCreate";
 
     private File dataFile;
-
     private Bookcase bookcase;
+    private Comparator<Book> comparator;
 
     private BookArrayAdapter adapter;
     private ArrayList<Book> adapterData;
@@ -93,6 +95,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    protected void reloadData()
+    {
+        adapterData = bookcase.getBooks();
+        Collections.sort(adapterData, comparator);
+        adapter.notifyDataSetChanged();
+    }
+
     protected synchronized void saveData()
     {
         try {
@@ -108,20 +117,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dataFile = new File(getFilesDir(), "books.xml");
-
         bookcase = new Bookcase();
-
-        try {
-            bookcase.loadFromXml(dataFile);
-        } catch (FileNotFoundException e) {
-            Log.i(tag, "Data file not found: " + e.getMessage());
-        } catch (XmlPullParserException e) {
-            Log.e(tag, "Data file format error: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(tag, "Data file unknown error: " + e.getMessage());
-        }
+        comparator = Book.TitleComparator;
 
         adapterData = bookcase.getBooks();
+        Collections.sort(adapterData, Book.TitleComparator);
         adapter = new BookArrayAdapter(this, adapterData);
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
@@ -135,6 +135,18 @@ public class MainActivity extends AppCompatActivity {
                 addBook(view);
             }
         });
+
+        try {
+            bookcase.loadFromXml(dataFile);
+        } catch (FileNotFoundException e) {
+            Log.i(tag, "Data file not found: " + e.getMessage());
+        } catch (XmlPullParserException e) {
+            Log.e(tag, "Data file format error: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(tag, "Data file unknown error: " + e.getMessage());
+        }
+
+        reloadData();
     }
 
     @Override
@@ -144,22 +156,16 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.add(book);
-
                     saveData();
-
-                    adapterData = bookcase.getBooks();
-                    adapter.notifyDataSetChanged();
+                    reloadData();
                 }
                 break;
             case EDIT_BOOK_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.set(book);
-
                     saveData();
-
-                    adapterData = bookcase.getBooks();
-                    adapter.notifyDataSetChanged();
+                    reloadData();
                 }
                 break;
             case SHOW_BOOK_REQUEST:
