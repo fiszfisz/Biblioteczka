@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     static final int ADD_BOOK_REQUEST = 1;
     static final int EDIT_BOOK_REQUEST = 2;
+
+    private File dataFile;
 
     private Bookcase bookcase;
 
@@ -39,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             Book book = (Book)getItem(position);
-            // TODO use convert view with view holder
+            // TODO use convert view with the view holder
             View view = inflater.inflate(R.layout.activity_main_item, parent, false);
 
             TextView titleTextView = view.findViewById(R.id.titleTextView);
@@ -69,12 +77,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    protected synchronized void saveData()
+    {
+        try {
+            bookcase.saveAsXml(dataFile);
+        } catch (IOException e) {
+            Log.e("MainActivity.onCreate", "Error on saving data: " + e.getMessage());
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bookcase = new Bookcase(getFilesDir());
+        String tag = "MainActivity.onCreate";
+
+        dataFile = new File(getFilesDir(), "books.xml");
+
+        bookcase = new Bookcase();
+
+        try {
+            bookcase.loadFromXml(dataFile);
+        } catch (FileNotFoundException e) {
+            Log.i(tag, "Data file not found: " + e.getMessage());
+        } catch (XmlPullParserException e) {
+            Log.e(tag, "Data file format error: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(tag, "Data file unknown error: " + e.getMessage());
+        }
 
         adapterData = bookcase.getBooks();
         adapter = new BookArrayAdapter(this, adapterData);
@@ -89,53 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 addBook(view);
             }
         });
-
-        Book book;
-
-        book = new Book();
-        book.author = "Jarosław Grzędowicz";
-        book.title = "Hel 3";
-        book.cover = "http://ecsmedia.pl/c/hel-3-w-iext47374727.jpg";
-        bookcase.add(book);
-
-        book = new Book();
-        book.author = "Philip K. Dick";
-        book.title = "Raport Mniejszości";
-        book.cover = "http://ecsmedia.pl/c/raport-mniejszosci-w-iext45139908.jpg";
-        bookcase.add(book);
-
-        book = new Book();
-        book.author = "Andrzej Sapkowski";
-        book.title = "Miecz Przeznaczenia";
-        book.cover = "https://www.granice.pl/sys6/pliki/okladka_k/c4ad2da802a2eb57b140b2dfa9d20cbc.jpeg";
-        bookcase.add(book);
-
-        book = new Book();
-        book.author = "Dmitry Glukhovsky";
-        book.title = "Metro 2033";
-        book.cover = "http://menmagazine.pl/wp-content/uploads/2015/09/metro2033_cover_front_480x720.jpg";
-        bookcase.add(book);
-
-        book = new Book();
-        book.author = "Dmitry Glukhovsky";
-        book.title = "Metro 2034";
-        book.cover = "https://7.allegroimg.com/s512/03e38d/b5ea9ffb4a75b84a14e684eeea67";
-        bookcase.add(book);
-
-        book = new Book();
-        book.author = "Jarosław Grzędowicz";
-        book.title = "Pan Lodowego Ogrodu TOM 4";
-        book.cover = "http://ecsmedia.pl/c/pan-lodowego-ogrodu-tom-4-w-iext43252937.jpg";
-        bookcase.add(book);
-
-        book = new Book();
-        book.author = "Chips Hardy";
-        book.title = "Poluj, bo upolują ciebie";
-        book.cover = "http://ecsmedia.pl/c/poluj-bo-upoluja-ciebie-w-iext38782418.jpg";
-        bookcase.add(book);
-
-        adapterData = bookcase.getBooks();
-        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -146,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.add(book);
 
+                    saveData();
+
                     adapterData = bookcase.getBooks();
                     adapter.notifyDataSetChanged();
                 }
@@ -154,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.set(book);
+
+                    saveData();
 
                     adapterData = bookcase.getBooks();
                     adapter.notifyDataSetChanged();
