@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/sort_drawer"
+            android:icon="@drawable/ic_menu_sort"
+            android:title="@string/sort" />
+        <item
+            android:id="@+id/title_sort_drawer"
+            android:icon="@drawable/ic_menu_title"
+            android:title="@string/title" />
+        <item
+            android:id="@+id/author_sort_drawer"
+            android:icon="@drawable/ic_menu_author"
+            android:title="@string/author" />
+    </group>
+</menu>

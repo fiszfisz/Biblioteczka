@@ -6,10 +6,15 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -128,6 +133,10 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new OnItemClickListener());
         listView.setOnItemLongClickListener(new OnItemLongClickListener());
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
                 addBook(view);
             }
         });
+
+        setNavigationViewListener();
 
         try {
             bookcase.loadFromXml(dataFile);
@@ -147,6 +158,52 @@ public class MainActivity extends AppCompatActivity {
         }
 
         reloadData();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void setNavigationViewListener() {
+        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                        switch (item.getItemId()) {
+                            case R.id.sort_drawer:
+                                reloadData();
+                                break;
+                            case R.id.title_sort_drawer:
+                                item.setChecked(true);
+                                comparator = Book.TitleComparator;
+                                reloadData();
+                                drawerLayout.closeDrawers();
+                                break;
+                            case R.id.author_sort_drawer:
+                                item.setChecked(true);
+                                comparator = Book.AuthorComparator;
+                                reloadData();
+                                drawerLayout.closeDrawers();
+                                break;
+                        }
+
+                        return true;
+                    }
+                }
+        );
     }
 
     @Override

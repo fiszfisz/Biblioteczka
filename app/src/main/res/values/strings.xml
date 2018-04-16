@@ -2,6 +2,7 @@
     <string name="app_name">Biblioteczka</string>
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>
+    <string name="sort">Sortuj</string>
     <string name="author">Autor</string>
     <string name="title">Tytuł</string>
     <string name="publisher">Wydawca</string>
