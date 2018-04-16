@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     static final int EDIT_BOOK_REQUEST = 2;
     static final int SHOW_BOOK_REQUEST = 3;
 
+    static final String tag = "MainActivity.onCreate";
+
     private File dataFile;
 
     private Bookcase bookcase;
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             bookcase.saveAsXml(dataFile);
         } catch (IOException e) {
-            Log.e("MainActivity.onCreate", "Error on saving data: " + e.getMessage());
+            Log.e(tag, "Error on saving data: " + e.getMessage());
         }
     }
 
@@ -104,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        String tag = "MainActivity.onCreate";
 
         dataFile = new File(getFilesDir(), "books.xml");
 
