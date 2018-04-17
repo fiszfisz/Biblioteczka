@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -84,19 +83,24 @@ public class EditBookActivity extends AppCompatActivity {
                         String line;
                         BufferedReader br;
 
+                        String authorText;
                         String titleText;
                         String coverText;
 
+                        Pattern authorPattern;
                         Pattern titlePattern;
                         Pattern coverPattern;
 
+                        Matcher authorMatcher;
                         Matcher titleMatcher;
                         Matcher coverMatcher;
 
+                        EditText authorEditText = view.findViewById(R.id.authorEditText);
                         EditText titleEditText = view.findViewById(R.id.titleEditText);
                         EditText coverEditText = view.findViewById(R.id.coverEditText);
 
                         if (address.contains("empik.com")) {
+                            authorPattern = Pattern.compile("<title>(.*) - (.*?) \\| .*?<\\/title>");
                             titlePattern = Pattern.compile("<meta property=\\\"og:title\\\" content=\\\"(.*?)\\\" \\/>");
                             coverPattern = Pattern.compile("<meta property=\\\"og:image\\\" content=\\\"(.*?)\\\" \\/>");
 
@@ -104,18 +108,22 @@ public class EditBookActivity extends AppCompatActivity {
 
                             try {
                                 while ((line = br.readLine()) != null) {
+                                    authorMatcher = authorPattern.matcher(line);
+                                    if (authorMatcher.matches()) {
+                                        authorText = authorMatcher.group(2);
+                                        authorEditText.setText(authorText);
+                                    }
+
                                     titleMatcher = titlePattern.matcher(line);
                                     if (titleMatcher.matches()) {
                                         titleText = titleMatcher.group(1);
                                         titleEditText.setText(titleText);
-                                        continue;
                                     }
 
                                     coverMatcher = coverPattern.matcher(line);
                                     if (coverMatcher.matches()) {
                                         coverText = coverMatcher.group(1);
                                         coverEditText.setText(coverText);
-                                        continue;
                                     }
                                 }
                             } catch (Exception e) {
@@ -123,6 +131,37 @@ public class EditBookActivity extends AppCompatActivity {
                             }
                         }
 
+                        if (address.contains("lubimyczytac.pl")) {
+                            authorPattern = Pattern.compile("<title>(.*?) - (.*?) \\(.*?\\) - .*<\\/title>");
+                            titlePattern = Pattern.compile("<title>(.*?) - (.*?) \\(.*?\\) - .*<\\/title>");
+                            coverPattern = Pattern.compile("<meta property=\\\"og:image\\\" content=\\\"(.*?)\\\" \\/>");
+
+                            br = new BufferedReader(new StringReader(data));
+
+                            try {
+                                while ((line = br.readLine()) != null) {
+                                    authorMatcher = authorPattern.matcher(line);
+                                    if (authorMatcher.find()) {
+                                        authorText = authorMatcher.group(1);
+                                        authorEditText.setText(authorText);
+                                    }
+
+                                    titleMatcher = titlePattern.matcher(line);
+                                    if (titleMatcher.find()) {
+                                        titleText = titleMatcher.group(2);
+                                        titleEditText.setText(titleText);
+                                    }
+
+                                    coverMatcher = coverPattern.matcher(line);
+                                    if (coverMatcher.find()) {
+                                        coverText = coverMatcher.group(1);
+                                        coverEditText.setText(coverText);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.e(tag, "Unknown error while reading parsed data: " + e.getMessage());
+                            }
+                        }
                     }
                 }
             }
@@ -160,6 +199,7 @@ public class EditBookActivity extends AppCompatActivity {
 
     private void loadClipboardContents(String address) {
         WebsiteDownloaderTask task = new WebsiteDownloaderTask(findViewById(R.id.constraint_layout), address);
+        Log.i(tag, "Parsing data: " + address);
         task.execute();
     }
 
