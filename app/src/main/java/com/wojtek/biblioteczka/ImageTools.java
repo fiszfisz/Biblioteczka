@@ -3,6 +3,7 @@ package com.wojtek.biblioteczka;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.WeakHashMap;
@@ -24,7 +25,8 @@ public class ImageTools {
         try {
             URL url = new URL(address);
             URLConnection connection = url.openConnection();
-            bmp = BitmapFactory.decodeStream(connection.getInputStream());
+            InputStream inputStream = connection.getInputStream();
+            bmp = BitmapFactory.decodeStream(inputStream);
             bitmapCache.put(address, bmp);
         } catch(Exception e) {
             bmp = null;
