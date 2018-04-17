@@ -8,12 +8,17 @@
 
     <ImageView
         android:id="@+id/coverImageView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/cover"
+        android:cropToPadding="false"
         android:maxWidth="100dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/authorTextView"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_book" />
@@ -27,6 +32,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/author"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/coverImageView"
         app:layout_constraintTop_toTopOf="parent" />
 

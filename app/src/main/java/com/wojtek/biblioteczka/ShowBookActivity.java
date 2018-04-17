@@ -38,7 +38,7 @@ public class ShowBookActivity extends AppCompatActivity {
         ImageView coverImageView = findViewById(R.id.coverImageView);
 
         authorTextView.setText(book.author);
-        titleTextView.setText(book.title);
+        titleTextView.setText(book.title.replace(". ", ".\n"));
         publisherTextView.setText(book.publisher);
         cityTextView.setText(book.city);
         yearTextView.setText(book.year);
