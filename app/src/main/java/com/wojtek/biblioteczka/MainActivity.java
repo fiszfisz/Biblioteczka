@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addBook(view);
+                addButtonClick(view);
             }
         });
 
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addBook(View view) {
+    public void addButtonClick(View view) {
         Book book = new Book();
         Intent intent = new Intent(view.getContext(), EditBookActivity.class);
         intent.putExtra("Book", book);

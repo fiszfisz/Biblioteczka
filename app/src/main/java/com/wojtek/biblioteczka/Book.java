@@ -80,6 +80,22 @@ public class Book implements Parcelable {
         // TODO missing borrow fields
     }
 
+    public boolean isEmpty() {
+        if (id == 0 &&
+                author.equals("") &&
+                title.equals("") &&
+                publisher.equals("") &&
+                city.equals("") &&
+                year.equals("") &&
+                cover.equals("")) {
+            return true;
+        } else {
+            return false;
+        }
+
+        // TODO missing borrow fields
+    }
+
     @Override
     public int describeContents() {
         return 0;
