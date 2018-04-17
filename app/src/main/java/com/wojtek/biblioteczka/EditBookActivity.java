@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 public class EditBookActivity extends AppCompatActivity {
+
+    static final String tag = "EditBookActivity";
 
     private Book book;
 
@@ -21,7 +24,7 @@ public class EditBookActivity extends AppCompatActivity {
         try {
             book = intent.getParcelableExtra("Book");
         } catch (Exception e) {
-            // TODO what to do if there is no parcel
+            Log.e(tag, "Cannot get book parcel");
         }
 
         if (book != null) {

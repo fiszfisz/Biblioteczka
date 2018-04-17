@@ -3,11 +3,14 @@ package com.wojtek.biblioteczka;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ShowBookActivity extends AppCompatActivity {
+
+    static final String tag = "ShowBookActivity";
 
     private Book book;
 
@@ -21,7 +24,7 @@ public class ShowBookActivity extends AppCompatActivity {
         try {
             book = intent.getParcelableExtra("Book");
         } catch (Exception e) {
-            // TODO what to do if there is no parcel
+            Log.e(tag, "Cannot get book parcel");
         }
 
         if (book != null) {

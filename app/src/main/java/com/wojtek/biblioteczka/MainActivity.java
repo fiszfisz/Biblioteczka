@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     static final int EDIT_BOOK_REQUEST = 2;
     static final int SHOW_BOOK_REQUEST = 3;
 
-    static final String tag = "MainActivity.onCreate";
+    static final String tag = "MainActivity";
 
     private File dataFile;
     private Bookcase bookcase;
