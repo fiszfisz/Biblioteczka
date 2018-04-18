@@ -1,6 +1,8 @@
 package com.wojtek.biblioteczka;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +35,8 @@ public class ShowBookActivity extends AppCompatActivity {
     }
 
     private void setContents(Book book) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         TextView authorTextView = findViewById(R.id.authorTextView);
         TextView titleTextView = findViewById(R.id.titleTextView);
         TextView publisherTextView = findViewById(R.id.publisherTextView);
@@ -40,8 +44,13 @@ public class ShowBookActivity extends AppCompatActivity {
         TextView yearTextView = findViewById(R.id.yearTextView);
         ImageView coverImageView = findViewById(R.id.coverImageView);
 
+        String titleText = book.title;
+        if (sharedPref.getBoolean(SettingsActivity.ALLOW_BREAK_TITLES, true)) {
+            titleText = titleText.replace(". ", ".\n");
+        }
+
         authorTextView.setText(book.author);
-        titleTextView.setText(book.title.replace(". ", ".\n"));
+        titleTextView.setText(titleText);
         publisherTextView.setText(book.publisher);
         cityTextView.setText(book.city);
         yearTextView.setText(book.year);

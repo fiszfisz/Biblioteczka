@@ -3,6 +3,8 @@ package com.wojtek.biblioteczka;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             Book book = (Book)getItem(position);
             // TODO use convert view with the view holder
             View view = inflater.inflate(R.layout.activity_main_item, parent, false);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
 
             TextView authorTextView = view.findViewById(R.id.authorTextView);
             TextView titleTextView = view.findViewById(R.id.titleTextView);
@@ -66,8 +69,13 @@ public class MainActivity extends AppCompatActivity {
             TextView yearTextView = view.findViewById(R.id.yearTextView);
             ImageView imageView = view.findViewById(R.id.coverImageView);
 
+            String titleText = book.title;
+            if (sharedPref.getBoolean(SettingsActivity.ALLOW_BREAK_TITLES, true)) {
+                titleText = titleText.replace(". ", ".\n");
+            }
+
             authorTextView.setText(book.author);
-            titleTextView.setText(book.title.replace(". ", ".\n"));
+            titleTextView.setText(titleText);
             publisherTextView.setText(book.publisher);
             yearTextView.setText(book.year);
 
@@ -201,6 +209,10 @@ public class MainActivity extends AppCompatActivity {
                                 reloadData();
                                 drawerLayout.closeDrawers();
                                 break;
+                            case R.id.settings_drawer:
+                                openSettingsClick(null);
+                                drawerLayout.closeDrawers();
+                                break;
                         }
 
                         return true;
@@ -240,5 +252,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(view.getContext(), EditBookActivity.class);
         intent.putExtra("Book", book);
         startActivityForResult(intent, ADD_BOOK_REQUEST);
+    }
+
+    public void openSettingsClick(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }

@@ -13,5 +13,9 @@
             android:id="@+id/author_sort_drawer"
             android:icon="@drawable/ic_menu_author"
             android:title="@string/author" />
+        <item
+            android:id="@+id/settings_drawer"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="@string/settings" />
     </group>
 </menu>
