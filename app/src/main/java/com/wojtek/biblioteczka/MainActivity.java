@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (item.getItemId()) {
                             case R.id.sort_drawer:
-                                reloadData();
                                 break;
                             case R.id.title_sort_drawer:
                                 item.setChecked(true);
