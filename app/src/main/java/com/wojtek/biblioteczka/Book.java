@@ -81,17 +81,13 @@ public class Book implements Parcelable {
     }
 
     public boolean isEmpty() {
-        if (id == 0 &&
+        return (id == 0 &&
                 author.equals("") &&
                 title.equals("") &&
                 publisher.equals("") &&
                 city.equals("") &&
                 year.equals("") &&
-                cover.equals("")) {
-            return true;
-        } else {
-            return false;
-        }
+                cover.equals(""));
 
         // TODO missing borrow fields
     }

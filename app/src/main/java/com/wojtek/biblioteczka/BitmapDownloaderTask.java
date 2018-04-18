@@ -34,15 +34,14 @@ public class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
             bitmap = null;
         }
 
-        if (imageViewWeakReference != null) {
-            ImageView imageView = imageViewWeakReference.get();
-            if (imageView != null) {
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                    Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.ic_book);
-                    imageView.setImageDrawable(placeholder);
-                }
+        ImageView imageView = imageViewWeakReference.get();
+
+        if (imageView != null) {
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.ic_book);
+                imageView.setImageDrawable(placeholder);
             }
         }
     }
