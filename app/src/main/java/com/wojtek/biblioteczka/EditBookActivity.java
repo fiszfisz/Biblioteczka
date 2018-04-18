@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -38,7 +40,11 @@ public class EditBookActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            // Placeholder
+            View view = viewWeakReference.get();
+            ImageView imageView = view.findViewById(R.id.stateImageView);
+            Drawable load = imageView.getContext().getResources().getDrawable(R.drawable.ic_load);
+            imageView.setImageDrawable(load);
+
         }
 
         @Override
@@ -99,6 +105,9 @@ public class EditBookActivity extends AppCompatActivity {
                         EditText titleEditText = view.findViewById(R.id.titleEditText);
                         EditText coverEditText = view.findViewById(R.id.coverEditText);
 
+                        ImageView imageView = view.findViewById(R.id.stateImageView);
+                        Drawable ok = imageView.getContext().getResources().getDrawable(R.drawable.ic_ok);
+
                         if (address.contains("empik.com")) {
                             authorPattern = Pattern.compile("<title>(.*) - (.*?) \\| .*?<\\/title>");
                             titlePattern = Pattern.compile("<meta property=\\\"og:title\\\" content=\\\"(.*?)\\\" \\/>");
@@ -142,13 +151,13 @@ public class EditBookActivity extends AppCompatActivity {
                                 while ((line = br.readLine()) != null) {
                                     authorMatcher = authorPattern.matcher(line);
                                     if (authorMatcher.find()) {
-                                        authorText = authorMatcher.group(1);
+                                        authorText = authorMatcher.group(2);
                                         authorEditText.setText(authorText);
                                     }
 
                                     titleMatcher = titlePattern.matcher(line);
                                     if (titleMatcher.find()) {
-                                        titleText = titleMatcher.group(2);
+                                        titleText = titleMatcher.group(1);
                                         titleEditText.setText(titleText);
                                     }
 
@@ -162,6 +171,8 @@ public class EditBookActivity extends AppCompatActivity {
                                 Log.e(tag, "Unknown error while reading parsed data: " + e.getMessage());
                             }
                         }
+
+                        imageView.setImageDrawable(ok);
                     }
                 }
             }
