@@ -12,6 +12,16 @@ import java.util.Comparator;
 
 public class Book implements Parcelable {
 
+    public static Comparator<Book> IdComparator = new Comparator<Book>() {
+        @Override
+        public int compare(Book o1, Book o2) {
+            int v1 = o1.id;
+            int v2 = o2.id;
+
+            return Integer.compare(v1, v2);
+        }
+    };
+
     public static Comparator<Book> AuthorComparator = new Comparator<Book>() {
         @Override
         public int compare(Book o1, Book o2) {
