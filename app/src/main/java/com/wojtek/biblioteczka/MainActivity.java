@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
         dataFile = new File(getFilesDir(), "books.xml");
         bookcase = new Bookcase();
-        comparator = Book.TitleComparator;
+
+        setCompareMethod(null);
 
         adapterData = bookcase.getBooks();
         Collections.sort(adapterData, Book.TitleComparator);
@@ -194,26 +195,28 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                        item.setChecked(true);
+
                         switch (item.getItemId()) {
                             case R.id.sort_drawer:
+                                setCompareMethod(null);
+                                reloadData();
                                 break;
                             case R.id.title_sort_drawer:
-                                item.setChecked(true);
-                                comparator = Book.TitleComparator;
+                                setCompareMethod(SettingsActivity.SORT_METHOD_TITLE);
                                 reloadData();
-                                drawerLayout.closeDrawers();
                                 break;
                             case R.id.author_sort_drawer:
-                                item.setChecked(true);
-                                comparator = Book.AuthorComparator;
+                                setCompareMethod(SettingsActivity.SORT_METHOD_AUTHOR);
                                 reloadData();
-                                drawerLayout.closeDrawers();
                                 break;
                             case R.id.settings_drawer:
                                 openSettingsClick(null);
-                                drawerLayout.closeDrawers();
                                 break;
                         }
+
+                        item.setChecked(false);
+                        drawerLayout.closeDrawers();
 
                         return true;
                     }
@@ -245,6 +248,32 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    private void setCompareMethod(String method) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if (method == null) {
+            method = sharedPref.getString(SettingsActivity.SORT_METHOD, "");
+        }
+
+        switch (method) {
+            case SettingsActivity.SORT_METHOD_AUTHOR:
+                editor.putString(SettingsActivity.SORT_METHOD, SettingsActivity.SORT_METHOD_AUTHOR);
+                comparator = Book.AuthorComparator;
+                break;
+            case SettingsActivity.SORT_METHOD_TITLE:
+                editor.putString(SettingsActivity.SORT_METHOD, SettingsActivity.SORT_METHOD_TITLE);
+                comparator = Book.TitleComparator;
+                break;
+            default:
+                editor.putString(SettingsActivity.SORT_METHOD, SettingsActivity.SORT_METHOD_TITLE);
+                comparator = Book.TitleComparator;
+                break;
+        }
+
+        editor.commit();
     }
 
     public void addButtonClick(View view) {
