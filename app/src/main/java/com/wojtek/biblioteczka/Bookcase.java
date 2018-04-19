@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Bookcase {
 
@@ -65,24 +66,26 @@ public class Bookcase {
         return books;
     }
 
-    public void saveAsXml(File file) throws IOException {
+    protected void bookListToXml(ArrayList<Book> list, File file) throws IOException {
         FileOutputStream os = new FileOutputStream(file);
         StringBuilder sb = new StringBuilder();
 
+        Collections.sort(list, Book.IdComparator);
+
         final String format =
                 "  <book>\n" +
-                "    <id>%d</id>\n" +
-                "    <author>%s</author>\n" +
-                "    <title>%s</title>\n" +
-                "    <publisher>%s</publisher>\n" +
-                "    <city>%s</city>\n" +
-                "    <year>%s</year>\n" +
-                "    <cover>%s</cover>\n" +
-                "  </book>\n";
+                        "    <id>%d</id>\n" +
+                        "    <author>%s</author>\n" +
+                        "    <title>%s</title>\n" +
+                        "    <publisher>%s</publisher>\n" +
+                        "    <city>%s</city>\n" +
+                        "    <year>%s</year>\n" +
+                        "    <cover>%s</cover>\n" +
+                        "  </book>\n";
 
         sb.append("<books>\n");
 
-        for (Book book : books) {
+        for (Book book : list) {
             String str = String.format(
                     format,
                     book.id,
@@ -101,7 +104,11 @@ public class Bookcase {
         os.close();
     }
 
-    public void loadFromXml(File file) throws IOException, XmlPullParserException {
+    public void saveAsXml(File file) throws IOException {
+        bookListToXml(books, file);
+    }
+
+    protected void bookListFromXml(ArrayList<Book> list, File file) throws IOException, XmlPullParserException {
         FileInputStream is = new FileInputStream(file);
 
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -122,6 +129,7 @@ public class Bookcase {
                     switch (tagName) {
                         case "book":
                             book = new Book();
+                            break;
                         default:
                             break;
                     }
@@ -155,7 +163,7 @@ public class Bookcase {
                             book.cover = text;
                             break;
                         case "book":
-                            books.add(book);
+                            list.add(book);
                             book = null;
                             break;
                     }
@@ -164,5 +172,12 @@ public class Bookcase {
 
             eventType = parser.next();
         }
+
+        is.close();
+    }
+
+    public void loadFromXml(File file) throws IOException, XmlPullParserException {
+        books.clear();
+        bookListFromXml(books, file);
     }
 }
