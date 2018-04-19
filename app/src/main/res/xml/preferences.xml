@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="allow_break_titles"
-        android:summary="Zezwalaj łamać tytuły książek zawierające kropki dla poprawy prezentacji"
-        android:title="Zezwalaj na łamanie tytułów" />
+    <PreferenceCategory android:title="Ogólne">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="allow_break_titles_preference"
+            android:summary="Zezwalaj łamać tytuły książek zawierające kropki dla poprawy prezentacji"
+            android:title="Zezwalaj na łamanie tytułów" />
+    </PreferenceCategory>
 </PreferenceScreen>
