@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void reloadData()
     {
-        adapterData = bookcase.getBooks();
         Collections.sort(adapterData, comparator);
         adapter.notifyDataSetChanged();
     }
