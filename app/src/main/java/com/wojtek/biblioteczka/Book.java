@@ -42,6 +42,16 @@ public class Book implements Parcelable {
         }
     };
 
+    public static Comparator<Book> YearComparator = new Comparator<Book>() {
+        @Override
+        public int compare(Book o1, Book o2) {
+            String v1 = o1.year.toUpperCase();
+            String v2 = o2.year.toUpperCase();
+
+            return v1.compareTo(v2);
+        }
+    };
+
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Book createFromParcel(Parcel in) {
             return new Book(in);

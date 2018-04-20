@@ -197,16 +197,16 @@ public class MainActivity extends AppCompatActivity {
                         item.setChecked(true);
 
                         switch (item.getItemId()) {
-                            case R.id.sort_drawer:
-                                setCompareMethod(null);
-                                reloadData();
-                                break;
                             case R.id.title_sort_drawer:
                                 setCompareMethod(SettingsActivity.SORT_METHOD_TITLE);
                                 reloadData();
                                 break;
                             case R.id.author_sort_drawer:
                                 setCompareMethod(SettingsActivity.SORT_METHOD_AUTHOR);
+                                reloadData();
+                                break;
+                            case R.id.year_sort_drawer:
+                                setCompareMethod(SettingsActivity.SORT_METHOD_YEAR);
                                 reloadData();
                                 break;
                             case R.id.settings_drawer:
@@ -265,6 +265,10 @@ public class MainActivity extends AppCompatActivity {
             case SettingsActivity.SORT_METHOD_TITLE:
                 editor.putString(SettingsActivity.SORT_METHOD, SettingsActivity.SORT_METHOD_TITLE);
                 comparator = Book.TitleComparator;
+                break;
+            case SettingsActivity.SORT_METHOD_YEAR:
+                editor.putString(SettingsActivity.SORT_METHOD, SettingsActivity.SORT_METHOD_YEAR);
+                comparator = Book.YearComparator;
                 break;
             default:
                 editor.putString(SettingsActivity.SORT_METHOD, SettingsActivity.SORT_METHOD_TITLE);
