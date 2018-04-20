@@ -10,4 +10,7 @@
     <string name="city">Miasto</string>
     <string name="year">Rok</string>
     <string name="cover">Okładka</string>
+    <string name="general_preference_title">Ogólne</string>
+    <string name="allow_break_titles_preference_title">Zezwalaj na łamanie tytułów</string>
+    <string name="allow_break_titles_preference_summary">Zezwalaj łamać tytuły książek zawierające kropki dla poprawy prezentacji</string>
 </resources>

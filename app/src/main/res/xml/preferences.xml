@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Ogólne">
+    <PreferenceCategory android:title="@string/general_preference_title">
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="allow_break_titles_preference"
-            android:summary="Zezwalaj łamać tytuły książek zawierające kropki dla poprawy prezentacji"
-            android:title="Zezwalaj na łamanie tytułów" />
+            android:summary="@string/allow_break_titles_preference_summary"
+            android:title="@string/allow_break_titles_preference_title" />
     </PreferenceCategory>
 </PreferenceScreen>
