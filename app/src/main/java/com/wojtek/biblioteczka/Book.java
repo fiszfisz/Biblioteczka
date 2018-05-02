@@ -63,6 +63,7 @@ public class Book implements Parcelable {
     };
 
     public int id;
+    public int version;
     public String author;
     public String title;
     public String publisher;
@@ -75,6 +76,7 @@ public class Book implements Parcelable {
 
     public Book() {
         id = 0;
+        version = 0;
         author = "";
         title = "";
         publisher = "";
@@ -90,6 +92,7 @@ public class Book implements Parcelable {
         super();
 
         id = in.readInt();
+        version = in.readInt();
         author = in.readString();
         title = in.readString();
         publisher = in.readString();
@@ -102,6 +105,7 @@ public class Book implements Parcelable {
 
     public boolean isEmpty() {
         return (id == 0 &&
+                version == 0 &&
                 author.equals("") &&
                 title.equals("") &&
                 publisher.equals("") &&
@@ -112,6 +116,25 @@ public class Book implements Parcelable {
         // TODO missing borrow fields
     }
 
+    public void copy(Book other) {
+        id = other.id;
+        version = other.version;
+        author = other.author;
+        title = other.title;
+        publisher = other.publisher;
+        city = other.city;
+        year = other.year;
+        cover = other.cover;
+
+        // TODO missing borrow fields
+    }
+
+    public Book clone() {
+        Book book = new Book();
+        book.copy(this);
+        return book;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -120,6 +143,7 @@ public class Book implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeInt(version);
         dest.writeString(author);
         dest.writeString(title);
         dest.writeString(publisher);

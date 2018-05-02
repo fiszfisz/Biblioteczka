@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import jcifs.smb.SmbFile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     private BookArrayAdapter adapter;
     private ArrayList<Book> adapterData;
+
+    private Context context;
+    private SharedPreferences sharedPref;
+    private SmbFile syncFile;
 
     private class BookArrayAdapter extends ArrayAdapter {
         public BookArrayAdapter(Context context, ArrayList<Book> array) {
@@ -112,14 +119,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void reloadData()
-    {
+    protected void reloadData() {
         Collections.sort(adapterData, comparator);
         adapter.notifyDataSetChanged();
     }
 
-    protected synchronized void saveData()
-    {
+    protected synchronized void saveData() {
         try {
             bookcase.saveAsXml(dataFile);
         } catch (IOException e) {
@@ -127,10 +132,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    protected synchronized void synchronizeData() {
+        boolean sync_enabled = sharedPref.getBoolean(SettingsActivity.SYNC_ENABLED, false);
+        String sync_location = sharedPref.getString(SettingsActivity.SYNC_LOCATION, "");
+
+        if (!sync_enabled) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SettingsActivity.SYNC_ENABLED, false);
+            editor.commit();
+            sync_enabled = false;
+        }
+
+        if (sync_enabled) {
+            try {
+                Toast.makeText(context, R.string.sync_started, Toast.LENGTH_SHORT).show();
+
+                String name = "smb://" + sync_location + "/books.xml";
+                syncFile = new SmbFile(name);
+                bookcase.synchronizeWithSmb(syncFile);
+
+                Toast.makeText(context, R.string.sync_finished, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Log.e(tag, "Synchronization not finished: " + e.getMessage());
+                Toast.makeText(context, R.string.sync_error, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        context = getApplicationContext();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         dataFile = new File(getFilesDir(), "books.xml");
         bookcase = new Bookcase();
@@ -170,6 +205,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         reloadData();
+
+        if (savedInstanceState == null) {
+            synchronizeData();
+        }
     }
 
     @Override
@@ -231,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.add(book);
                     saveData();
+                    synchronizeData();
                     reloadData();
                 }
                 break;
@@ -239,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.set(book);
                     saveData();
+                    synchronizeData();
                     reloadData();
                 }
                 break;

@@ -1,17 +1,31 @@
 package com.wojtek.biblioteczka;
 
+import android.util.Log;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileInputStream;
+import jcifs.smb.SmbFileOutputStream;
+
 public class Bookcase {
+
+    private final String tag = "Bookcase";
 
     private ArrayList<Book> books;
 
@@ -54,20 +68,77 @@ public class Bookcase {
         books.add(book);
     }
 
-    public void set(Book book) {
-        for (int index = 0; index < books.size(); index++) {
-            if (books.get(index).id == book.id) {
-                books.set(index, book);
+    private int bookIndex(ArrayList<Book> list, int id) {
+        for (int index = 0; index < list.size(); index++) {
+            if (list.get(index).id == id) {
+                return index;
             }
         }
+
+        return -1;
+    }
+
+    public Book get(int id) {
+        int index = bookIndex(books, id);
+        return books.get(index);
+    }
+
+    public void set(Book book) {
+        int index = bookIndex(books, book.id);
+        books.set(index, book);
     }
 
     public ArrayList<Book> getBooks() {
         return books;
     }
 
-    protected void bookListToXml(ArrayList<Book> list, File file) throws IOException {
+    protected String fileToString (File file) throws IOException {
+        StringBuilder sb = new StringBuilder();
+
+        if (file.exists()) {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+
+        return sb.toString();
+    }
+
+    protected void stringToFile (String data, File file) throws IOException {
         FileOutputStream os = new FileOutputStream(file);
+        os.write(data.getBytes());
+        os.close();
+    }
+
+    protected String smbFileToString(SmbFile file) throws IOException {
+        StringBuilder sb = new StringBuilder();
+
+        if (file.exists()) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new SmbFileInputStream(file)));
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            reader.close();
+        }
+
+        return sb.toString();
+    }
+
+    protected void stringToSmbFile(String data, SmbFile file) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new SmbFileOutputStream(file)));
+        writer.write(data);
+        writer.close();
+    }
+
+    protected String bookListToXml(ArrayList<Book> list) {
         StringBuilder sb = new StringBuilder();
 
         Collections.sort(list, Book.IdComparator);
@@ -75,6 +146,7 @@ public class Bookcase {
         final String format =
                 "  <book>\n" +
                         "    <id>%d</id>\n" +
+                        "    <version>%d</version>\n" +
                         "    <author>%s</author>\n" +
                         "    <title>%s</title>\n" +
                         "    <publisher>%s</publisher>\n" +
@@ -89,6 +161,7 @@ public class Bookcase {
             String str = String.format(
                     format,
                     book.id,
+                    book.version,
                     book.author,
                     book.title,
                     book.publisher,
@@ -100,16 +173,11 @@ public class Bookcase {
 
         sb.append("</books>\n");
 
-        os.write(sb.toString().getBytes());
-        os.close();
+        return sb.toString();
     }
 
-    public void saveAsXml(File file) throws IOException {
-        bookListToXml(books, file);
-    }
-
-    protected void bookListFromXml(ArrayList<Book> list, File file) throws IOException, XmlPullParserException {
-        FileInputStream is = new FileInputStream(file);
+    protected void bookListFromXml(ArrayList<Book> list, String data) throws IOException, XmlPullParserException {
+        InputStream is = new ByteArrayInputStream(data.getBytes());
 
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -144,6 +212,8 @@ public class Bookcase {
                         case "id":
                             book.id = Integer.parseInt(text);
                             break;
+                        case "version":
+                            book.version = Integer.parseInt(text);
                         case "author":
                             book.author = text;
                             break;
@@ -176,8 +246,97 @@ public class Bookcase {
         is.close();
     }
 
+    protected boolean synchronizeArrays(ArrayList<Book> books1, ArrayList<Book> books2) {
+        boolean changed = false;
+
+        int index;
+        Book other;
+
+        for (Book book : books1) {
+            index = bookIndex(books2, book.id);
+            if (index > -1) {
+                other = books2.get(index);
+            } else {
+                other = null;
+            }
+
+            if (other == null) {
+                books2.add(book.clone());
+                changed = true;
+                continue;
+            }
+
+            if (book.version > other.version) {
+                other.copy(book);
+                changed = true;
+            }
+        }
+
+        for (Book book : books2) {
+            index = bookIndex(books1, book.id);
+            if (index > -1) {
+                other = books1.get(index);
+            } else {
+                other = null;
+            }
+
+            if (other == null) {
+                books1.add(book.clone());
+                changed = true;
+                continue;
+            }
+
+            if (book.version > other.version) {
+                other.copy(book);
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
+
     public void loadFromXml(File file) throws IOException, XmlPullParserException {
+        String data;
+
         books.clear();
-        bookListFromXml(books, file);
+        data = fileToString(file);
+        bookListFromXml(books, data);
+    }
+
+    public void saveAsXml(File file) throws IOException {
+        String data;
+
+        data = bookListToXml(books);
+        stringToFile(data, file);
+    }
+
+    public void synchronizeWithSmb(final SmbFile remoteFile) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean changed;
+                String data;
+                ArrayList<Book> remoteBooks;
+
+                try {
+                    data = smbFileToString(remoteFile);
+                    remoteBooks = new ArrayList<>();
+                    bookListFromXml(remoteBooks, data);
+
+                    synchronized (books) {
+                        changed = synchronizeArrays(books, remoteBooks);
+                    }
+
+                    if (changed) {
+                        data = bookListToXml(remoteBooks);
+                        stringToSmbFile(data, remoteFile);
+                    }
+                } catch (Exception e) {
+                    Log.e(tag, "Synchronization exception: " + e.getMessage());
+                }
+            }
+        });
+
+        thread.start();
     }
 }

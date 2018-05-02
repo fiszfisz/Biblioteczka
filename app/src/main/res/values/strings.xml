@@ -10,7 +10,15 @@
     <string name="city">Miasto</string>
     <string name="year">Rok</string>
     <string name="cover">Okładka</string>
+    <string name="sync_started">Synchronizacja rozpoczęta</string>
+    <string name="sync_finished">Synchronizacja zakończona</string>
+    <string name="sync_error">Brak synchronizacji</string>
     <string name="general_preference_title">Ogólne</string>
     <string name="allow_break_titles_preference_title">Zezwalaj na łamanie tytułów</string>
     <string name="allow_break_titles_preference_summary">Zezwalaj łamać tytuły książek zawierające kropki dla poprawy prezentacji</string>
+    <string name="sync_preference_title">Synchronizacja</string>
+    <string name="sync_enabled_preference_title">Włącz synchronizację</string>
+    <string name="sync_enabled_preference_summary">Synchronizuj dane poprzez publiczny katalog współdzielony</string>
+    <string name="sync_location_preference_title">Lokalizacja sieciowa</string>
+    <string name="sync_location_preference_summary">Lokalizacja musi być udziałem publicznym</string>
 </resources>

@@ -8,4 +8,20 @@
             android:summary="@string/allow_break_titles_preference_summary"
             android:title="@string/allow_break_titles_preference_title" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/sync_preference_title">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="sync_enabled_preference"
+            android:summary="@string/sync_enabled_preference_summary"
+            android:title="@string/sync_enabled_preference_title" />
+        <EditTextPreference
+            android:dependency="sync_enabled_preference"
+            android:key="sync_location_preference"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/sync_location_preference_summary"
+            android:title="@string/sync_location_preference_title" />
+    </PreferenceCategory>
 </PreferenceScreen>

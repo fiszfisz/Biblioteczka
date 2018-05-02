@@ -25,9 +25,11 @@ import java.util.regex.Pattern;
 
 public class EditBookActivity extends AppCompatActivity {
 
-    static final String tag = "EditBookActivity";
+    private static final String tag = "EditBookActivity";
 
     private Book book;
+
+    private boolean newBook;
 
     private class WebsiteDownloaderTask extends AsyncTask<String, Void, String> {
         private final String address;
@@ -200,11 +202,16 @@ public class EditBookActivity extends AppCompatActivity {
             ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             ClipData.Item item = clipboardManager.getPrimaryClip().getItemAt(0);
             String pasteData = item.getText().toString();
+
             if (pasteData != null) {
                 if (pasteData.startsWith("http") || pasteData.contains("www.")) {
                     loadClipboardContents(pasteData);
                 }
             }
+
+            newBook = true;
+        } else {
+            newBook = false;
         }
     }
 
@@ -245,6 +252,10 @@ public class EditBookActivity extends AppCompatActivity {
         book.city = cityEditText.getText().toString().trim();
         book.year = yearEditText.getText().toString().trim();
         book.cover = coverEditText.getText().toString().trim();
+
+        if (!newBook) {
+            book.version++;
+        }
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("Book", book);

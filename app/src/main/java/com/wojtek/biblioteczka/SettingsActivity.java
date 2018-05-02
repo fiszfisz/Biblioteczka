@@ -12,6 +12,9 @@ public class SettingsActivity extends PreferenceActivity {
 
     final static String ALLOW_BREAK_TITLES = "allow_break_titles_preference";
 
+    final static String SYNC_ENABLED = "sync_enabled_preference";
+    final static String SYNC_LOCATION = "sync_location_preference";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
