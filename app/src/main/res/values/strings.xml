@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Biblioteczka</string>
+    <string name="edit">Edytuj</string>
+    <string name="delete">Usuń</string>
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>
     <string name="sort">Sortuj</string>

@@ -15,7 +15,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,16 +108,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class OnItemLongClickListener implements AdapterView.OnItemLongClickListener {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Book book = (Book)parent.getItemAtPosition(position);
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
 
-            Intent intent = new Intent(view.getContext(), EditBookActivity.class);
-            intent.putExtra("Book", book);
-            startActivityForResult(intent, EDIT_BOOK_REQUEST);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
 
-            return true;
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
+        switch (item.getItemId()) {
+            case R.id.context_menu_edit:
+                Book book = adapterData.get(info.position);
+
+                Intent intent = new Intent(context, EditBookActivity.class);
+                intent.putExtra("Book", book);
+                startActivityForResult(intent, EDIT_BOOK_REQUEST);
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 
@@ -178,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener());
-        listView.setOnItemLongClickListener(new OnItemLongClickListener());
+        registerForContextMenu(listView);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
