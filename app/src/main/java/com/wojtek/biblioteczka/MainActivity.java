@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Context context;
     private SharedPreferences sharedPref;
-    private SmbFile syncFile;
 
     private class BookArrayAdapter extends ArrayAdapter {
         public BookArrayAdapter(Context context, ArrayList<Book> array) {
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         boolean sync_enabled = sharedPref.getBoolean(SettingsActivity.SYNC_ENABLED, false);
         String sync_location = sharedPref.getString(SettingsActivity.SYNC_LOCATION, "");
 
-        if (!sync_enabled) {
+        if (sync_location.isEmpty()) {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(SettingsActivity.SYNC_ENABLED, false);
             editor.commit();
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context, R.string.sync_started, Toast.LENGTH_SHORT).show();
 
                 String name = "smb://" + sync_location + "/books.xml";
-                syncFile = new SmbFile(name);
+                SmbFile syncFile = new SmbFile(name);
                 bookcase.synchronizeWithSmb(syncFile);
 
                 Toast.makeText(context, R.string.sync_finished, Toast.LENGTH_SHORT).show();
