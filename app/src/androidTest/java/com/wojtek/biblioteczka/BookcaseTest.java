@@ -27,29 +27,29 @@ public class BookcaseTest {
 
         books.synchronizeArrays(books1, books2);
 
-        assertEquals(books1.size(), 1);
+        assertEquals(1, books1.size());
         book = books1.get(0);
-        assertEquals(book.id, 0);
-        assertEquals(book.version, 0);
+        assertEquals(0, book.id);
+        assertEquals(0, book.version);
 
-        assertEquals(books2.size(), 1);
+        assertEquals(1, books2.size());
         book = books2.get(0);
-        assertEquals(book.id, 0);
-        assertEquals(book.version, 0);
+        assertEquals(0, book.id);
+        assertEquals(0, book.version);
 
         book.version = 1;
 
         books.synchronizeArrays(books1, books2);
 
-        assertEquals(books1.size(), 1);
+        assertEquals(1, books1.size());
         book = books1.get(0);
-        assertEquals(book.id, 0);
-        assertEquals(book.version, 1);
+        assertEquals(0, book.id);
+        assertEquals(1, book.version);
 
-        assertEquals(books2.size(), 1);
+        assertEquals(1, books2.size());
         book = books2.get(0);
-        assertEquals(book.id, 0);
-        assertEquals(book.version, 1);
+        assertEquals(0, book.id);
+        assertEquals(1, book.version);
 
         book = new Book();
         book.id = 1;
@@ -58,7 +58,7 @@ public class BookcaseTest {
 
         books.synchronizeArrays(books1, books2);
 
-        assertEquals(books1.size(), 2);
-        assertEquals(books2.size(), 2);
+        assertEquals(2, books1.size());
+        assertEquals(2, books2.size());
     }
 }
