@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -58,15 +59,32 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
 
     private class BookArrayAdapter extends ArrayAdapter {
+        private ArrayList<Book> booksOriginal;
+        private ArrayList<Book> booksFiltered;
+        private BookFilter filter;
+
         public BookArrayAdapter(Context context, ArrayList<Book> array) {
             super(context, 0, array);
+            booksOriginal = array;
+            booksFiltered = new ArrayList<>();
+            booksFiltered.addAll(booksOriginal);
+        }
+
+        @Override
+        public int getCount() {
+            return booksFiltered.size();
+        }
+
+        @Override
+        public Book getItem(int position) {
+            return booksFiltered.get(position);
         }
 
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            Book book = (Book)getItem(position);
+            Book book = getItem(position);
             // TODO use convert view with the view holder
             View view = inflater.inflate(R.layout.activity_main_item, parent, false);
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -94,6 +112,60 @@ public class MainActivity extends AppCompatActivity {
 
             return view;
         }
+
+        @NonNull
+        @Override
+        public Filter getFilter() {
+            if (filter == null) {
+                filter = new BookFilter();
+            }
+            return filter;
+        }
+
+        private class BookFilter extends Filter {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String text = constraint.toString().toLowerCase();
+                FilterResults result = new FilterResults();
+
+                ArrayList<Book> filtered = new ArrayList<>();
+
+                for (Book book : booksOriginal) {
+                    if (book.version < 0) {
+                        continue;
+                    }
+
+                    if (text.isEmpty()) {
+                        filtered.add(book);
+                    } else {
+                        if (book.author.toLowerCase().contains(text)) {
+                            filtered.add(book);
+                        }
+                        if (book.title.toLowerCase().contains(text)) {
+                            filtered.add(book);
+                        }
+                    }
+                }
+
+                result.values = filtered;
+                result.count = filtered.size();
+
+                return result;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                booksFiltered = (ArrayList<Book>)results.values;
+                notifyDataSetChanged();
+                clear();
+
+                for (int i = 0, l = booksFiltered.size(); i < l; i++) {
+                    add(booksFiltered.get(i));
+                    notifyDataSetInvalidated();
+                }
+            }
+        }
     }
 
     private class OnItemClickListener implements AdapterView.OnItemClickListener {
@@ -119,13 +191,24 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 
+        Book book;
+
         switch (item.getItemId()) {
             case R.id.context_menu_edit:
-                Book book = adapterData.get(info.position);
+                book = adapterData.get(info.position);
 
                 Intent intent = new Intent(context, EditBookActivity.class);
                 intent.putExtra("Book", book);
                 startActivityForResult(intent, EDIT_BOOK_REQUEST);
+
+                return true;
+            case R.id.context_menu_remove:
+                book = adapterData.get(info.position);
+
+                bookcase.remove(book);
+                saveData();
+                synchronizeData();
+                reloadData();
 
                 return true;
             default:
@@ -133,9 +216,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void reloadData() {
+    protected synchronized void reloadData() {
         Collections.sort(adapterData, comparator);
-        adapter.notifyDataSetChanged();
+        adapter.getFilter().filter("");
     }
 
     protected synchronized void saveData() {
@@ -148,7 +231,28 @@ public class MainActivity extends AppCompatActivity {
 
     protected synchronized void synchronizeData() {
         boolean sync_enabled = sharedPref.getBoolean(SettingsActivity.SYNC_ENABLED, false);
-        String sync_location = sharedPref.getString(SettingsActivity.SYNC_LOCATION, "");
+        final String sync_location = sharedPref.getString(SettingsActivity.SYNC_LOCATION, "");
+
+        Thread toastStart = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, R.string.sync_started, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Thread toastEnd = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, R.string.sync_finished, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Thread toastError = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, R.string.sync_error, Toast.LENGTH_LONG).show();
+            }
+        });
 
         if (sync_location.isEmpty()) {
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -159,18 +263,37 @@ public class MainActivity extends AppCompatActivity {
 
         if (sync_enabled) {
             try {
-                Toast.makeText(context, R.string.sync_started, Toast.LENGTH_SHORT).show();
+                runOnUiThread(toastStart);
 
                 String name = "smb://" + sync_location + "/books.xml";
                 SmbFile syncFile = new SmbFile(name);
                 bookcase.synchronizeWithSmb(syncFile);
 
-                Toast.makeText(context, R.string.sync_finished, Toast.LENGTH_SHORT).show();
+                runOnUiThread(toastEnd);
             } catch (Exception e) {
                 Log.e(tag, "Synchronization not finished: " + e.getMessage());
-                Toast.makeText(context, R.string.sync_error, Toast.LENGTH_LONG).show();
+                runOnUiThread(toastError);
             }
         }
+    }
+
+    protected void startUpdate() {
+        Thread sync = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronizeData();
+                saveData();
+
+                runOnUiThread(new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reloadData();
+                    }
+                }));
+            }
+        });
+
+        sync.start();
     }
 
     @Override
@@ -218,12 +341,9 @@ public class MainActivity extends AppCompatActivity {
             Log.e(tag, "Data file unknown error: " + e.getMessage());
         }
 
-        if (savedInstanceState == null) {
-            synchronizeData();
-            saveData();
-        }
-
         reloadData();
+
+        startUpdate();
     }
 
     @Override
@@ -284,18 +404,14 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.add(book);
-                    saveData();
-                    synchronizeData();
-                    reloadData();
+                    startUpdate();
                 }
                 break;
             case EDIT_BOOK_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
                     Book book = data.getParcelableExtra("Book");
                     bookcase.set(book);
-                    saveData();
-                    synchronizeData();
-                    reloadData();
+                    startUpdate();
                 }
                 break;
             case SHOW_BOOK_REQUEST:

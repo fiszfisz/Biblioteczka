@@ -88,6 +88,12 @@ public class Bookcase {
         books.set(index, book);
     }
 
+    public void remove(Book book) {
+        int index = bookIndex(books, book.id);
+        book = books.get(index);
+        book.version = -Math.abs(++book.version);
+    }
+
     public ArrayList<Book> getBooks() {
         return books;
     }
@@ -266,7 +272,7 @@ public class Bookcase {
                 continue;
             }
 
-            if (book.version > other.version) {
+            if (Math.abs(book.version) > Math.abs(other.version)) {
                 other.copy(book);
                 changed = true;
             }
@@ -286,12 +292,13 @@ public class Bookcase {
                 continue;
             }
 
-            if (book.version > other.version) {
+            if (Math.abs(book.version) > Math.abs(other.version)) {
                 other.copy(book);
                 changed = true;
             }
         }
 
+        // TODO maybe return number of changed items?
         return changed;
     }
 
@@ -310,33 +317,24 @@ public class Bookcase {
         stringToFile(data, file);
     }
 
-    public void synchronizeWithSmb(final SmbFile remoteFile) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean changed;
-                String data;
-                ArrayList<Book> remoteBooks;
+    public synchronized void synchronizeWithSmb(final SmbFile remoteFile) {
+        boolean changed;
+        String data;
+        ArrayList<Book> remoteBooks;
 
-                try {
-                    data = smbFileToString(remoteFile);
-                    remoteBooks = new ArrayList<>();
-                    bookListFromXml(remoteBooks, data);
+        try {
+            data = smbFileToString(remoteFile);
+            remoteBooks = new ArrayList<>();
+            bookListFromXml(remoteBooks, data);
 
-                    synchronized (books) {
-                        changed = synchronizeArrays(books, remoteBooks);
-                    }
+            changed = synchronizeArrays(books, remoteBooks);
 
-                    if (changed) {
-                        data = bookListToXml(remoteBooks);
-                        stringToSmbFile(data, remoteFile);
-                    }
-                } catch (Exception e) {
-                    Log.e(tag, "Synchronization exception: " + e.getMessage());
-                }
+            if (changed) {
+                data = bookListToXml(remoteBooks);
+                stringToSmbFile(data, remoteFile);
             }
-        });
-
-        thread.start();
+        } catch (Exception e) {
+            Log.e(tag, "Synchronization exception: " + e.getMessage());
+        }
     }
 }

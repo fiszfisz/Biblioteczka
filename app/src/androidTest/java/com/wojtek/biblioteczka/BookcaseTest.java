@@ -60,5 +60,11 @@ public class BookcaseTest {
 
         assertEquals(2, books1.size());
         assertEquals(2, books2.size());
+
+        book = books1.get(0);
+        book.version = -Math.abs(++book.version);
+        books.synchronizeArrays(books1, books2);
+
+        assertEquals(-2, books2.get(0).version);
     }
 }
