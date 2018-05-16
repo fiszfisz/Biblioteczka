@@ -88,9 +88,9 @@ public class Bookcase {
         books.set(index, book);
     }
 
-    public void remove(Book book) {
-        int index = bookIndex(books, book.id);
-        book = books.get(index);
+    public void remove(int id) {
+        int index = bookIndex(books, id);
+        Book book = books.get(index);
         book.version = -Math.abs(++book.version);
     }
 
