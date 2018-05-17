@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity
             Log.e(tag, "Data file unknown error: " + e.getMessage());
         }
 
+        reloadData();
         startUpdate();
     }
 
