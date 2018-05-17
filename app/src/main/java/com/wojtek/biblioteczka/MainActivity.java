@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                        // TODO add checked only for selected sort method
                         item.setChecked(true);
 
                         switch (item.getItemId()) {
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity
                                 break;
                             case R.id.settings_drawer:
                                 openSettings();
+                                item.setChecked(false);
                                 break;
                         }
 

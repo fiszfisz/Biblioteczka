@@ -5,18 +5,20 @@
             android:id="@+id/sort_drawer"
             android:title="@string/sort" >
             <menu>
-                <item
-                    android:id="@+id/title_sort_drawer"
-                    android:icon="@drawable/ic_menu_title"
-                    android:title="@string/title" />
-                <item
-                    android:id="@+id/author_sort_drawer"
-                    android:icon="@drawable/ic_menu_author"
-                    android:title="@string/author" />
-                <item
-                    android:id="@+id/year_sort_drawer"
-                    android:icon="@drawable/ic_menu_year"
-                    android:title="@string/year" />
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/title_sort_drawer"
+                        android:icon="@drawable/ic_menu_title"
+                        android:title="@string/title" />
+                    <item
+                        android:id="@+id/author_sort_drawer"
+                        android:icon="@drawable/ic_menu_author"
+                        android:title="@string/author" />
+                    <item
+                        android:id="@+id/year_sort_drawer"
+                        android:icon="@drawable/ic_menu_year"
+                        android:title="@string/year" />
+                </group>
             </menu>
         </item>
         <item
