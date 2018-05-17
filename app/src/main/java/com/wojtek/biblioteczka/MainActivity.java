@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
         SettingsFragment fragment = new SettingsFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        //transaction.replace(R.id.main_fragment, fragment);
+        transaction.replace(R.id.main_fragment, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

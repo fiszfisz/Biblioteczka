@@ -1,9 +1,9 @@
 package com.wojtek.biblioteczka;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
-public class SettingsFragment extends PreferenceFragment {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
     final static String SORT_METHOD = "sort_method_preference";
     final static String SORT_METHOD_AUTHOR = "sort_method_author_preference";
@@ -16,8 +16,7 @@ public class SettingsFragment extends PreferenceFragment {
     final static String SYNC_LOCATION = "sync_location_preference";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
     }
 }
